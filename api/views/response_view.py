@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from api.models import Response as ModelResponse
+from api.models import Response as ModelResponse, Vote
 from api.serializers import ResponseSerializer, VoteSerializer
 
 
@@ -27,10 +27,17 @@ class ResponseView(ModelViewSet):
 
     @action(detail=False)
     def voting(self, request, **kwargs):
-        # Todo check if user already voted
         vote_serializer = VoteSerializer(data=request.data, context={"request": request})
         vote_serializer.is_valid(raise_exception=True)
-        instance = get_object_or_404(ModelResponse, id=kwargs.get("id"))
-        instance.vote.add(vote_serializer.save())
-        serializer = self.serializer_class(instance, context={"request": request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        instance: ModelResponse = get_object_or_404(ModelResponse, id=kwargs.get("id"))
+        may_be_existing_vote = instance.vote.filter(owner=request.user)
+        if may_be_existing_vote.exists():
+            the_vote: Vote = may_be_existing_vote.first()
+            if the_vote.is_upvote != vote_serializer.validated_data["is_upvote"]:
+                the_vote = vote_serializer.validated_data["is_upvote"]
+                the_vote.save()
+            else:
+                instance.vote.remove(the_vote)
+        else:
+            instance.vote.add(vote_serializer.save())
+        return Response(status=status.HTTP_200_OK)
