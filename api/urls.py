@@ -1,7 +1,12 @@
 from django.urls import path
 
-from .views import hello_world
+from .views import UserView, UserAuthTokenView, QuestionView, ResponseView
 
 urlpatterns = [
-    path('hello_world', hello_world)
+    path('user', UserView.as_view({"post": "create", "get": "retrieve", "delete": "destroy", "patch": "update"})),
+    path('user/auth', UserAuthTokenView.as_view()),
+    path('question', QuestionView.as_view({"get": "list", "post": "create"})),
+    path('question/<int:id>', QuestionView.as_view({"get": "retrieve", "patch": "update", "delete": "destroy"})),
+    path('question/response/<int:id>', QuestionView.as_view({"post": "respond"})),
+    path('response/<int:id>', ResponseView.as_view({"delete": "destroy", "put": "update"}))
 ]
