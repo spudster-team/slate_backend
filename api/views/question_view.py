@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from api.models import Question
-from api.serializers import QuestionSerializer, ResponseSerializer
+from api.serializers import QuestionSerializer, ResponseSerializer, VoteSerializer
 
 
 class QuestionView(ModelViewSet):
@@ -45,4 +45,12 @@ class QuestionView(ModelViewSet):
         serializer = self.serializer_class(instance, context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # Todo: implement add vote
+    @action(detail=False)
+    def voting(self, request, **kwargs):
+        # Todo check if user already voted
+        vote_serializer = VoteSerializer(data=request.data, context={"request": request})
+        vote_serializer.is_valid(raise_exception=True)
+        instance: Question = get_object_or_404(Question, id=kwargs.get("id"))
+        instance.vote.add(vote_serializer.save())
+        serializer = self.serializer_class(instance, context={"request": request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
