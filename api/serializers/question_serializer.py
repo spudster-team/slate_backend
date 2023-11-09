@@ -53,9 +53,10 @@ class QuestionSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         if request and request.user.is_authenticated:
             may_be_existing_vote = votes.filter(owner=request.user)
-            data["info"] = {
-                "is_already_voted": may_be_existing_vote.exists(),
-                "nature": may_be_existing_vote.first().is_upvote
-            }
+            if may_be_existing_vote.exists():
+                data["info"] = {
+                    "is_already_voted": True,
+                    "is_upvote": may_be_existing_vote.first().is_upvote
+                }
 
         return data
