@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-gunicor slate.wsgi
+gunicorn slate.wsgi
