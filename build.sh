@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 pip install --upgrade pip
-pip install uvicorn["standard"]
+pip install gunicorn
 pip install -r requirements.txt
