@@ -1,21 +1,33 @@
 from rest_framework import serializers
 
-from api.models import Question, Photo
+from api.models import Question, Photo, Tag
 from .response_serializer import ResponseSerializer
+from .tag_serializer import TagSerializer
 
 
 class QuestionSerializer(serializers.ModelSerializer):
     owner = serializers.CharField(read_only=True)
     photo = serializers.ImageField(required=False, allow_null=True, allow_empty_file=True)
     response = ResponseSerializer(read_only=True, many=True)
+    tag = TagSerializer(required=False, many=True)
 
     class Meta:
         model = Question
-        fields = ("id", "owner", "title", "content", "date_posted", "photo", "response")
+        fields = ("id", "owner", "title", "content", "date_posted", "photo", "response", "tag")
 
     def validate(self, attrs):
         attrs["owner"] = self.context.get("request").user
         attrs["photo"] = Photo.objects.create(path=attrs["photo"]) if attrs.get("photo") else None
+
+        tags: list[Tag] = []
+        for tag in attrs["tag"]:
+            may_be_existing_tag = Tag.objects.filter(title=tag.title)
+            if may_be_existing_tag.exists():
+                tags.append(may_be_existing_tag.first())
+            else:
+                tags.append(Tag.objects.create(**tag))
+        attrs["tag"] = tags
+
         return attrs
 
     def to_representation(self, instance: Question):

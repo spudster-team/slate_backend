@@ -9,6 +9,7 @@ class Question(models.Model):
     photo = models.ForeignKey("Photo", on_delete=models.CASCADE, null=True, blank=True)
     vote = models.ManyToManyField("Vote", blank=True)
     response = models.ManyToManyField("Response", blank=True)
+    tag = models.ManyToManyField("Tag", blank=True)
 
     def __str__(self):
         return self.title
