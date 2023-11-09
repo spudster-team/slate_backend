@@ -19,6 +19,7 @@ class ResponseSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance: Response):
         data = super().to_representation(instance)
+
         votes = instance.vote.all()
         data["up_vote"] = votes.filter(is_upvote=True).count()
         data["down_vote"] = votes.filter(is_upvote=False).count()
@@ -32,4 +33,5 @@ class ResponseSerializer(serializers.ModelSerializer):
                     "is_upvote": may_be_existing_vote.first().is_upvote
                 }
         data["photo"] = PhotoSerializer(instance.photo, context={"request": request}).data
+
         return data

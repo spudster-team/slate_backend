@@ -42,6 +42,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     def to_representation(self, instance: Question):
         data = super().to_representation(instance)
         votes = instance.vote.all()
+
         data["up_vote"] = votes.filter(is_upvote=True).count()
         data["down_vote"] = votes.filter(is_upvote=False).count()
         data["n_response"] = instance.response.count()
