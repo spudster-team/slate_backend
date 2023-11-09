@@ -1,13 +1,14 @@
 from rest_framework import serializers
 
 from api.models import Question, Photo, Tag
+from . import PhotoSerializer
 from .response_serializer import ResponseSerializer
 from .tag_serializer import TagSerializer
 
 
 class QuestionSerializer(serializers.ModelSerializer):
     owner = serializers.CharField(read_only=True)
-    photo = serializers.ImageField(required=False, allow_null=True, allow_empty_file=True)
+    photo = serializers.ImageField(read_only=True, required=False, allow_null=True, allow_empty_file=True)
     response = ResponseSerializer(read_only=True, many=True)
     tag = TagSerializer(required=False, many=True)
 
@@ -18,7 +19,6 @@ class QuestionSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         attrs["owner"] = self.context.get("request").user
         attrs["photo"] = Photo.objects.create(path=attrs["photo"]) if attrs.get("photo") is not None else None
-        print("photo = ", attrs["photo"])
 
         tags: list[Tag] = []
         attrs_tags = attrs.get("tag")
@@ -35,10 +35,8 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         tag = validated_data.pop("tag")
-
         new_question: Question = Question.objects.create(**validated_data)
         new_question.tag.add(*tag)
-
         return new_question
 
     def to_representation(self, instance: Question):
@@ -56,5 +54,6 @@ class QuestionSerializer(serializers.ModelSerializer):
                     "is_already_voted": True,
                     "is_upvote": may_be_existing_vote.first().is_upvote
                 }
+        data["photo"] = PhotoSerializer(instance.photo, context={"request": request}).data
 
         return data
