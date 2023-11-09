@@ -8,7 +8,7 @@ from .tag_serializer import TagSerializer
 
 class QuestionSerializer(serializers.ModelSerializer):
     owner = serializers.CharField(read_only=True)
-    photo = serializers.ImageField(read_only=True, required=False, allow_null=True, allow_empty_file=True)
+    photo = serializers.ImageField(write_only=True, required=False, allow_null=True, allow_empty_file=True)
     response = ResponseSerializer(read_only=True, many=True)
     tag = TagSerializer(required=False, many=True)
 
@@ -19,7 +19,6 @@ class QuestionSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         attrs["owner"] = self.context.get("request").user
         attrs["photo"] = Photo.objects.create(path=attrs["photo"]) if attrs.get("photo") else None
-        print("photo", attrs["photo"])
 
         tags: list[Tag] = []
         attrs_tags = attrs.get("tag")
