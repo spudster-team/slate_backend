@@ -17,8 +17,8 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         attrs["owner"] = self.context.get("request").user
-        print(attrs["photo"])
         attrs["photo"] = Photo.objects.create(path=attrs["photo"]) if attrs.get("photo") is not None else None
+        print("photo = ", attrs["photo"])
 
         tags: list[Tag] = []
         attrs_tags = attrs.get("tag")
