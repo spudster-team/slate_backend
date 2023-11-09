@@ -37,7 +37,8 @@ class QuestionSerializer(serializers.ModelSerializer):
         tag = validated_data.pop("tag")
 
         new_question = Question.objects.create(**validated_data)
-        new_question.photo.add(photo)
+        if photo is not None:
+            new_question.photo.add(photo)
         new_question.tag.add(*tag)
 
         return new_question
