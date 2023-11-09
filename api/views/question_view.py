@@ -24,9 +24,9 @@ class QuestionView(ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         instance = get_object_or_404(Question, id=kwargs.get("id"), owner=request.user)
-        serializer = self.serializer_class(instance, data=request.data, context={"request": request})
+        serializer = self.serializer_class(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        serializer.update(instance, serializer.validated_data)
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 
     def destroy(self, request, *args, **kwargs):

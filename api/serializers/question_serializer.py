@@ -39,6 +39,16 @@ class QuestionSerializer(serializers.ModelSerializer):
         new_question.tag.add(*tag)
         return new_question
 
+    def update(self, instance, validated_data):
+        tags = validated_data.get("tag")
+        instance.title = validated_data.get("title", instance.title)
+        instance.content = validated_data.get("content", instance.content)
+        instance.photo = validated_data.get("photo", instance.photo)
+        if tags is not None:
+            instance.tag.add(*tags)
+        instance.save()
+        return instance
+
     def to_representation(self, instance: Question):
         data = super().to_representation(instance)
         votes = instance.vote.all()
