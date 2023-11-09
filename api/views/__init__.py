@@ -13,6 +13,6 @@ from ..serializers import TagSerializer
 @api_view(["GET"])
 def get_all_tags(request):
     if request.method == "GET":
-        instance = Tag.object.all()
+        instance = Tag.objects.all()
         serializer = TagSerializer(instance, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
