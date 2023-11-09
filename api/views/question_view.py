@@ -17,7 +17,7 @@ class QuestionView(ModelViewSet):
         return {"request": self.request}
 
     def get_permissions(self):
-        need_authentication = ["update", "destory", "create", "respond"]
+        need_authentication = ["update", "destory", "create", "respond", "voting"]
         if self.action in need_authentication:
             return [IsAuthenticated()]
         return [AllowAny()]

@@ -3,11 +3,12 @@ from rest_framework import serializers
 
 from api.models import User, Photo
 from api.utils import encrypt_password
+from .photo_seriaizer import PhotoSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, validators=[validate_password])
-    photo = serializers.ImageField(required=False, allow_null=True, allow_empty_file=True)
+    photo = serializers.ImageField(write_only=True, required=False, allow_null=True, allow_empty_file=True)
 
     class Meta:
         model = User
@@ -18,9 +19,15 @@ class UserSerializer(serializers.ModelSerializer):
         attrs["photo"] = Photo.objects.create(path=attrs["photo"]) if attrs.get("photo") else None
         return attrs
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        request = self.context.get("request")
+        data["photo"] = PhotoSerializer(instance.photo, context={"request": request}).data
+        return data
+
 
 class UpdateUserSerializer(serializers.ModelSerializer):
-    photo = serializers.ImageField(required=False, allow_null=True, allow_empty_file=True)
+    photo = serializers.ImageField(write_only=True, required=False, allow_null=True, allow_empty_file=True)
 
     class Meta:
         model = User
@@ -29,6 +36,12 @@ class UpdateUserSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         attrs["photo"] = Photo.objects.create(path=attrs["photo"]) if attrs.get("photo") else None
         return attrs
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        request = self.context.get("request")
+        data["photo"] = PhotoSerializer(instance.photo, context={"request": request}).data
+        return data
 
 
 class BasicUserViewSerializer(serializers.ModelSerializer):

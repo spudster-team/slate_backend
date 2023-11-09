@@ -1,3 +1,10 @@
 from django.contrib import admin
 
-# Register your models here.
+from api.models import *
+
+admin.site.register(Photo)
+admin.site.register(Question)
+admin.site.register(Response)
+admin.site.register(Tag)
+admin.site.register(User)
+admin.site.register(Vote)

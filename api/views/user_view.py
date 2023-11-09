@@ -42,7 +42,7 @@ class UserView(ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         user = User.objects.get(id=request.user.id)
-        serializer = UpdateUserSerializer(data=request.data)
+        serializer = UpdateUserSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
         serializer.update(user, serializer.validated_data)
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)

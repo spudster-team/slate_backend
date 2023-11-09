@@ -1,11 +1,12 @@
 from rest_framework import serializers
 
 from api.models import Response, Photo
+from api.serializers import PhotoSerializer
 
 
 class ResponseSerializer(serializers.ModelSerializer):
     owner = serializers.CharField(read_only=True)
-    photo = serializers.ImageField(required=False, allow_null=True, allow_empty_file=True)
+    photo = serializers.ImageField(write_only=True, required=False, allow_null=True, allow_empty_file=True)
 
     class Meta:
         model = Response
@@ -25,9 +26,10 @@ class ResponseSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         if request and request.user.is_authenticated:
             may_be_existing_vote = votes.filter(owner=request.user)
-            data["info"] = {
-                "is_already_voted": may_be_existing_vote.exists(),
-                "nature": may_be_existing_vote.first().is_upvote
-            }
-
+            if may_be_existing_vote.exists():
+                data["info"] = {
+                    "is_already_voted": True,
+                    "is_upvote": may_be_existing_vote.first().is_upvote
+                }
+        data["photo"] = PhotoSerializer(instance.photo, context={"request": request}).data
         return data
