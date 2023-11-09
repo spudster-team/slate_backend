@@ -20,15 +20,27 @@ class QuestionSerializer(serializers.ModelSerializer):
         attrs["photo"] = Photo.objects.create(path=attrs["photo"]) if attrs.get("photo") else None
 
         tags: list[Tag] = []
-        for tag in attrs["tag"]:
-            may_be_existing_tag = Tag.objects.filter(title=tag.title)
-            if may_be_existing_tag.exists():
-                tags.append(may_be_existing_tag.first())
-            else:
-                tags.append(Tag.objects.create(**tag))
+        attrs_tags = attrs.get(["tag"])
+        if attrs_tags:
+            for tag in attrs_tags:
+                may_be_existing_tag = Tag.objects.filter(title=tag.title)
+                if may_be_existing_tag.exists():
+                    tags.append(may_be_existing_tag.first())
+                else:
+                    tags.append(Tag.objects.create(**tag))
         attrs["tag"] = tags
 
         return attrs
+
+    def create(self, validated_data):
+        photo = validated_data.pop("photo")
+        tag = validated_data.pop("tag")
+
+        new_question = Question.objects.create(**validated_data)
+        new_question.photo.add(photo)
+        new_question.tag.add(*tag)
+
+        return new_question
 
     def to_representation(self, instance: Question):
         data = super().to_representation(instance)
