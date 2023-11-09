@@ -18,7 +18,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         attrs["owner"] = self.context.get("request").user
-        attrs["photo"] = Photo.objects.create(path=attrs["photo"]) if attrs.get("photo") is not None else None
+        attrs["photo"] = Photo.objects.create(path=attrs["photo"]) if attrs.get("photo") else None
         print("photo", attrs["photo"])
 
         tags: list[Tag] = []
@@ -36,14 +36,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         tag = validated_data.pop("tag")
-        photo = validated_data.pop("photo")
         new_question: Question = Question.objects.create(**validated_data)
-        if photo is not None:
-            new_question.photo = photo
-            new_question.save()
-            print("image is saved on question")
-            print("image again", photo)
-
         new_question.tag.add(*tag)
         return new_question
 

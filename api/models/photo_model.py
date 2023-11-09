@@ -21,5 +21,6 @@ class Photo(models.Model):
     path = models.ImageField(upload_to=image_filename, storage=image_storage, null=True, blank=True)
 
     def save(self, **kwargs):
+        print("path on create", self.path)
         self.path = reduce_image_size(self.path)
         super(Photo, self).save(**kwargs)
