@@ -33,14 +33,9 @@ class QuestionSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        photo = validated_data.pop("photo")
         tag = validated_data.pop("tag")
-
-        new_question = Question.objects.create(**validated_data)
-        if photo is not None:
-            new_question.photo.add(photo)
+        new_question: Question = Question.objects.create(**validated_data)
         new_question.tag.add(*tag)
-
         return new_question
 
     def to_representation(self, instance: Question):
