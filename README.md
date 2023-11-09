@@ -81,6 +81,24 @@ ___
 - **response**: ```201 created```
 
 ```json
+[
+  {
+    "id": 19,
+    "owner": "Nomeniavo Joe",
+    "title": "J'ai une erreur de code avec python",
+    "content": "voici",
+    "date_posted": "2023-11-09T14:01:13.003538Z",
+    "response": [],
+    "tag": [],
+    "up_vote": 0,
+    "down_vote": 0,
+    "n_response": 0,
+    "photo": {
+      "id": 8,
+      "path": "https://slate-service-api.onrender.com/media/images/image_capture.png_1699538472.8806033.png"
+    }
+  }
+]
 ```
 
 ___
@@ -91,25 +109,35 @@ ___
 
 ```json
 [
-    {
-        "id": 19,
-        "owner": "Nomeniavo Joe",
-        "title": "J'ai une erreur de code avec python",
-        "content": "voici",
-        "date_posted": "2023-11-09T14:01:13.003538Z",
-        "response": [],
-        "tag": [],
-        "up_vote": 1,
-        "down_vote": 0,
-        "n_response": 0,
-        "info": {
-            "is_already_voted": true,
-            "is_upvote": true
-        },
-        "photo": {
-            "id": 8,
-            "path": "https://slate-service-api.onrender.com/media/images/image_capture.png_1699538472.8806033.png"
-        }
+  {
+    "id": 19,
+    "owner": "Nomeniavo Joe",
+    "title": "J'ai une erreur de code avec python",
+    "content": "voici",
+    "date_posted": "2023-11-09T14:01:13.003538Z",
+    "response": [],
+    "tag": [],
+    "up_vote": 1,
+    "down_vote": 0,
+    "n_response": 0,
+    "info": {
+      "is_already_voted": true,
+      "is_upvote": true
+    },
+    "photo": {
+      "id": 8,
+      "path": "https://slate-service-api.onrender.com/media/images/image_capture.png_1699538472.8806033.png"
     }
+  }
 ]
 ```
+
+---
+
+### Delete All Question
+
+- **get**: /api/question/<int:question_id>
+- **need authentication**:
+- **Authorization**: `token d75dad1a0db1c2b01cfb3b67d0f68b1e7dda2ed8`
+- 
+- **response**: ```204 no content```
