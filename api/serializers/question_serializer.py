@@ -35,7 +35,11 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         tag = validated_data.pop("tag")
+        photo = validated_data.pop("photo")
         new_question: Question = Question.objects.create(**validated_data)
+        if photo:
+            new_question.photo = photo
+            new_question.save()
         new_question.tag.add(*tag)
         return new_question
 
