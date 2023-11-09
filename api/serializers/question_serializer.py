@@ -20,7 +20,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         attrs["photo"] = Photo.objects.create(path=attrs["photo"]) if attrs.get("photo") else None
 
         tags: list[Tag] = []
-        attrs_tags = attrs.get(["tag"])
+        attrs_tags = attrs.get("tag")
         if attrs_tags:
             for tag in attrs_tags:
                 may_be_existing_tag = Tag.objects.filter(title=tag.title)

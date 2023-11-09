@@ -13,6 +13,9 @@ class QuestionView(ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
 
+    def get_serializer_context(self):
+        return {"request": self.request}
+
     def get_permissions(self):
         need_authentication = ["update", "destory", "create", "respond"]
         if self.action in need_authentication:
