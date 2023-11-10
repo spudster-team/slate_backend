@@ -41,6 +41,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         tags = validated_data.get("tag")
+        instance.vote = validated_data.get("vote", instance.vote)
         instance.title = validated_data.get("title", instance.title)
         instance.content = validated_data.get("content", instance.content)
         instance.photo = validated_data.get("photo", instance.photo)

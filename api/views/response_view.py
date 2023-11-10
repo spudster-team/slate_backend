@@ -38,6 +38,7 @@ class ResponseView(ModelViewSet):
                 the_vote.save()
             else:
                 instance.vote.remove(the_vote)
+                the_vote.delete()
         else:
             instance.vote.add(vote_serializer.save())
         return Response(status=status.HTTP_200_OK)
