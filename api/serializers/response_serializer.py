@@ -9,7 +9,7 @@ from .user_serializer import UserSerializer
 class ResponseSerializer(serializers.ModelSerializer):
     owner = UserSerializer(read_only=True)
     photo = serializers.ImageField(write_only=True, required=False, allow_null=True, allow_empty_file=True)
-    data_posted = serializers.SerializerMethodField(method_name="get_time_since_posted")
+    date_posted = serializers.SerializerMethodField(method_name="get_time_since_posted")
 
     class Meta:
         model = Response
