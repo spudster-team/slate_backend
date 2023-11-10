@@ -22,7 +22,7 @@ class ResponseSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_time_since_posted(obj):
-        return timesince(obj.data_posted)
+        return timesince(obj.date_posted)
 
     def to_representation(self, instance: Response):
         data = super().to_representation(instance)
