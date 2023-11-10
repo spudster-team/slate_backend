@@ -159,8 +159,9 @@ ___
     "path": "https://slate-service-api.onrender.com/media/images/image_capture.png_1699538472.8806033.png"
   }
 }
-  
+
 ```
+
 ---
 
 ### Delete Question
@@ -168,12 +169,15 @@ ___
 - **get**: /api/question/<int:question_id>
 - **need authentication**:
 - **Authorization**: `token d75dad1a0db1c2b01cfb3b67d0f68b1e7dda2ed8`
-- 
+-
 - **response**: ```204 no content```
+
 ___
+
 ### Vote Question
 
 **post**: /api/question/vote/<int:question_id>
+
 - **need authentication**:
 - **Authorization**: `token d75dad1a0db1c2b01cfb3b67d0f68b1e7dda2ed8`
 
@@ -184,6 +188,7 @@ ___
   "is_upvote": true
 }
 ```
+
 - **response**: ```200 ok```
 
 ```json
@@ -217,15 +222,17 @@ ___
 - **need authenticaiton**:
 
 - **body**
+
 ```json
 {
-    "content": "",
-    "photo": null
+  "content": "",
+  "photo": null
 }
 
 ```
-  
+
 - **resposne**
+
 ```json
 {
   "id": 19,
@@ -268,10 +275,13 @@ ___
   }
 }
   ```
+
 ---
+
 ### Search Question
 
 - **get**: /api/question?search=python
+
 ```json
 [
   {
@@ -292,6 +302,80 @@ ___
     "photo": {
       "id": 8,
       "path": "https://slate-service-api.onrender.com/media/images/image_capture.png_1699538472.8806033.png"
+    }
+  }
+]
+```
+
+---
+
+### Get the most Active User
+
+- **get**: /api/user/most-active
+
+```json
+[
+  {
+    "id": 4,
+    "email": "test@gmail.com",
+    "first_name": "t",
+    "last_name": "t",
+    "photo": {
+      "path": null
+    }
+  },
+  {
+    "id": 1,
+    "email": "24email@gmail.com",
+    "first_name": "Nomeniavo Joe",
+    "last_name": "Fitahiana",
+    "photo": {
+      "path": null
+    }
+  },
+  {
+    "id": 7,
+    "email": "rado123@gmail.com",
+    "first_name": "josé",
+    "last_name": "rado",
+    "photo": {
+      "path": null
+    }
+  },
+  {
+    "id": 9,
+    "email": "rado12345@gmail.com",
+    "first_name": "josé",
+    "last_name": "rado",
+    "photo": {
+      "path": null
+    }
+  },
+  {
+    "id": 3,
+    "email": "rhja1@email.com",
+    "first_name": "rhja1",
+    "last_name": "rhja1",
+    "photo": {
+      "path": null
+    }
+  },
+  {
+    "id": 5,
+    "email": "rado@gmail.com",
+    "first_name": "josé",
+    "last_name": "rado",
+    "photo": {
+      "path": null
+    }
+  },
+  {
+    "id": 2,
+    "email": "rhja@email.com",
+    "first_name": "rhja",
+    "last_name": "rhja",
+    "photo": {
+      "path": null
     }
   }
 ]

@@ -22,7 +22,7 @@ class UserView(ModelViewSet):
         return [AllowAny()]
 
     @action(detail=False)
-    def most_actif_user(self, request):
+    def most_active_user(self, request):
         most_active_users = User.objects.annotate(
             activity_count=Count("question") + Count("response")
         ).order_by("-activity_count").exclude(is_superuser=True)[:7]
