@@ -268,3 +268,31 @@ ___
   }
 }
   ```
+---
+### Search Question
+
+- **get**: /api/question?search=python
+```json
+[
+  {
+    "id": 19,
+    "owner": "Nomeniavo Joe",
+    "title": "J'ai une erreur de code avec python",
+    "content": "voici",
+    "date_posted": "2023-11-09T14:01:13.003538Z",
+    "response": [],
+    "tag": [],
+    "up_vote": 1,
+    "down_vote": 0,
+    "n_response": 0,
+    "info": {
+      "is_already_voted": true,
+      "is_upvote": true
+    },
+    "photo": {
+      "id": 8,
+      "path": "https://slate-service-api.onrender.com/media/images/image_capture.png_1699538472.8806033.png"
+    }
+  }
+]
+```

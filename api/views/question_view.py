@@ -1,5 +1,6 @@
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from rest_framework import status
+from rest_framework import status, filters
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -12,6 +13,18 @@ from api.serializers import QuestionSerializer, ResponseSerializer, VoteSerializ
 class QuestionView(ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["title", "content"]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.query_params.get("search", None)
+        if search_query is not None and not len(search_query) == 0:
+            return queryset.filter(Q(title__contains=search_query) | Q(content__contains=search_query))
+        elif search_query is None:
+            return queryset
+        else:
+            return []
 
     def get_serializer_context(self):
         return {"request": self.request}

@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import status
+from rest_framework import status, filters
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -12,6 +12,18 @@ from api.serializers import ResponseSerializer, VoteSerializer
 class ResponseView(ModelViewSet):
     serializer_class = ResponseSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["title"]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.query_params.get("search", None)
+        if search_query is not None and not len(search_query) == 0:
+            return queryset.filter(content__contains=search_query)
+        elif search_query is None:
+            return queryset
+        else:
+            return []
 
     def destroy(self, request, *args, **kwargs):
         instance = get_object_or_404(ModelResponse, owner=request.user, id=kwargs.get("id"))
