@@ -1,6 +1,8 @@
+from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.authtoken.models import Token
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -19,9 +21,13 @@ class UserView(ModelViewSet):
             return [IsAuthenticated()]
         return [AllowAny()]
 
-    def most_actif_user(self, request, *args, **kwargs):
-        # Todo: implement this
-        pass
+    @action(detail=False)
+    def most_actif_user(self, request):
+        most_active_users = User.objects.annotate(
+            activity_count=Count("question") + Count("response")
+        ).order_by("-activity_count").exclude(is_superuser=True)[:7]
+        serializer = self.serializer_class(most_active_users, many=True, context={"request": request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data, context={"request", request})
