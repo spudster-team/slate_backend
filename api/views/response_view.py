@@ -13,7 +13,7 @@ class ResponseView(ModelViewSet):
     serializer_class = ResponseSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [filters.SearchFilter]
-    search_fields = ["title"]
+    search_fields = ["content"]
 
     def get_queryset(self):
         queryset = super().get_queryset()
