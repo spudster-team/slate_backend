@@ -1,16 +1,19 @@
 from rest_framework import serializers
+from django.utils.timesince import timesince
 
 from api.models import Question, Photo, Tag
 from . import PhotoSerializer
 from .response_serializer import ResponseSerializer
 from .tag_serializer import TagSerializer
+from .user_serializer import UserSerializer
 
 
 class QuestionSerializer(serializers.ModelSerializer):
-    owner = serializers.CharField(read_only=True)
+    owner = UserSerializer(read_only=True)
     photo = serializers.ImageField(write_only=True, required=False, allow_null=True, allow_empty_file=True)
     response = ResponseSerializer(read_only=True, many=True)
     tag = TagSerializer(required=False, many=True)
+    date_posted = serializers.SerializerMethodField(method_name="get_time_since_posted")
 
     class Meta:
         model = Question
@@ -49,6 +52,10 @@ class QuestionSerializer(serializers.ModelSerializer):
             instance.tag.add(*tags)
         instance.save()
         return instance
+
+    @staticmethod 
+    def get_time_since_posted(obj):
+        return timesince(obj.date_posted)
 
     def to_representation(self, instance: Question):
         data = super().to_representation(instance)
