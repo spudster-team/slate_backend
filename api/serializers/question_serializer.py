@@ -1,5 +1,5 @@
-from rest_framework import serializers
 from django.utils.timesince import timesince
+from rest_framework import serializers
 
 from api.models import Question, Photo, Tag
 from . import PhotoSerializer
@@ -53,7 +53,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-    @staticmethod 
+    @staticmethod
     def get_time_since_posted(obj):
         return timesince(obj.date_posted)
 
