@@ -12,7 +12,7 @@ from api.serializers import UserSerializer, UpdateUserSerializer
 
 
 class UserView(ModelViewSet):
-    queryset = User
+    queryset = User.objects.all()
     serializer_class = UserSerializer
 
     def get_permissions(self):
@@ -30,7 +30,7 @@ class UserView(ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data, context={"request", request})
+        serializer = self.serializer_class(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
         instance = serializer.save()
         token, _ = Token.objects.get_or_create(user=instance)
