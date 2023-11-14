@@ -20,17 +20,20 @@ class UserView(ModelViewSet):
         if self.action in need_authentication:
             return [IsAuthenticated()]
         return [AllowAny()]
+    
+    def get_serializer_context(self):
+        return {"request": request}
 
     @action(detail=False)
     def most_active_user(self, request):
         most_active_users = User.objects.annotate(
             activity_count=Count("question") + Count("response")
         ).order_by("-activity_count").exclude(is_superuser=True)[:7]
-        serializer = self.serializer_class(most_active_users, many=True, context={"request": request})
+        serializer = self.serializer_class(most_active_users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data, context={"request": request})
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         instance = serializer.save()
         token, _ = Token.objects.get_or_create(user=instance)
@@ -38,7 +41,7 @@ class UserView(ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         instance = get_object_or_404(User, id=request.user.id)
-        serializer = self.serializer_class(instance=instance, context={"request": request})
+        serializer = self.serializer_class(instance=instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):

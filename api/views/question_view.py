@@ -25,7 +25,7 @@ class QuestionView(ModelViewSet):
             return queryset
         else:
             return []
-
+    
     def get_serializer_context(self):
         return {"request": self.request}
 
@@ -37,7 +37,7 @@ class QuestionView(ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         instance = get_object_or_404(Question, id=kwargs.get("id"), owner=request.user)
-        serializer = self.serializer_class(data=request.data, context={"request": request})
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.update(instance, serializer.validated_data)
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
@@ -49,7 +49,7 @@ class QuestionView(ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         instance = get_object_or_404(Question, id=kwargs.get("id"))
-        serializer = self.serializer_class(instance, context={"request": request})
+        serializer = self.serializer_class(instance)
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 
     @action(detail=False)
@@ -58,7 +58,7 @@ class QuestionView(ModelViewSet):
         response_serializer.is_valid(raise_exception=True)
         instance: Question = get_object_or_404(Question, id=kwargs.get("id"))
         instance.response.add(response_serializer.save())
-        serializer = self.serializer_class(instance, context={"request": request})
+        serializer = self.serializer_class(instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False)
