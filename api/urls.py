@@ -8,9 +8,9 @@ urlpatterns = [
     path('user/auth', UserAuthTokenView.as_view()),
     path('question', QuestionView.as_view({"get": "list", "post": "create"})),
     path('question/<int:id>', QuestionView.as_view({"get": "retrieve", "patch": "update", "delete": "destroy"})),
-    path('question/<int:id>/vote', QuestionView.as_view({"post": "voting"})),
-    path('question/<int:id>/response', QuestionView.as_view({"post": "respond"})),
+    path('question/vote/<int:id>', QuestionView.as_view({"post": "voting"})),
+    path('question/response/<int:id>', QuestionView.as_view({"post": "respond"})),
     path('response/<int:id>', ResponseView.as_view({"delete": "destroy", "put": "update"})),
-    path('response/<int:id>/vote', ResponseView.as_view({"post": "voting"})),
+    path('response/vote/<int:id>', ResponseView.as_view({"post": "voting"})),
     path('tags', get_all_tags),
 ]
