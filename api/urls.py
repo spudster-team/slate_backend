@@ -11,6 +11,6 @@ urlpatterns = [
     path('question/<int:id>/vote', QuestionView.as_view({"post": "voting"})),
     path('question/<int:id>/response', QuestionView.as_view({"post": "respond"})),
     path('response/<int:id>', ResponseView.as_view({"delete": "destroy", "put": "update"})),
-    path('response/vote/<int:id>', ResponseView.as_view({"post": "voting"})),
+    path('response/<int:id>/vote', ResponseView.as_view({"post": "voting"})),
     path('tags', get_all_tags),
 ]
