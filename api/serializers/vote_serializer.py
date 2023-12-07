@@ -8,7 +8,7 @@ class VoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Vote
-        fields = ("id", "owner", "is_upvote", "date_posted")
+        fields = ("owner", "is_upvote")
 
     def validate(self, attrs):
         attrs["owner"] = self.context.get("request").user

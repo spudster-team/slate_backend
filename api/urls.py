@@ -13,5 +13,4 @@ urlpatterns = [
     path('response/<int:id>', ResponseView.as_view({"delete": "destroy", "put": "update"})),
     path('response/vote/<int:id>', ResponseView.as_view({"post": "voting"})),
     path('tags', get_all_tags),
-    path('photos', get_all_photo)
 ]
